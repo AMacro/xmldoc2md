@@ -679,7 +679,13 @@ internal class TypeDocumentation
                 noPrefix: this.options.GitlabWiki);
         }
 
-        return new MarkdownText(text ?? crefAttribute);
+        if (!string.IsNullOrWhiteSpace(text))
+            return new MarkdownText(text);
+
+        if (!string.IsNullOrWhiteSpace(crefAttribute) && crefAttribute.Length > 2)
+            return new MarkdownInlineCode(crefAttribute[2..]);
+
+        return new MarkdownText(string.Empty);
     }
 
     private bool TryGetMemberInfoFromReference(string? crefAttribute, out MemberInfo? memberInfo)
